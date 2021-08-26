@@ -87,9 +87,11 @@ namespace Microsoft.Quantum.QIR
 
         // qubit functions
         public const string QubitAllocate = "qubit_allocate";
-        public const string QubitAllocateArray = "qubit_allocate_array";
         public const string QubitRelease = "qubit_release";
+                
+        public const string QubitAllocateArray = "qubit_allocate_array";
         public const string QubitReleaseArray = "qubit_release_array";
+        public const string QubitUpdateReferenceCount = "qubit_update_reference_count";
 
         // diagnostics
         public const string Fail = "fail";

@@ -160,7 +160,6 @@ namespace Microsoft.Quantum.QsCompiler.QIR
         }
 
         /* public overrides */
-
         public override QsStatementKind OnQubitScope(QsQubitScope stm)
         {
             void ProcessQubitBinding(QsBinding<ResolvedInitializer> binding)

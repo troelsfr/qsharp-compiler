@@ -5,10 +5,53 @@ namespace TeleportChain {
     open Microsoft.Quantum.Measurement;
     open Microsoft.Quantum.Preparation;
 
+    operation Case0(): Qubit
+    {
+        use x = Qubit();
+
+        return x;
+    }
+
+    operation Case1(q: Qubit): Qubit[]
+    {
+        let x = [q, q];
+        return x;
+    }
+
+    operation Case2(q: Qubit): Qubit[]
+    {
+        let x = [q];
+
+        // There is no garantuee that q is released before program exit
+        return x;
+    }
+
+    operation Case3(q: Qubit): Unit
+    {
+        let x = [q, q]; /// This is clear OK,
+        // however, unless we prove that x is deallocation at the end 
+        // the qubit cannot be safely deallocated
+    }
+
+    operation Case4(q: Qubit): Qubit;
+    {
+        if( x )
+        {
+            // No-op - ref count remains the same and all is good
+            return q;
+        }
+
+        // New qubit with 
+        use x = Qubit();
+
+        return x;
+    }
+
     @EntryPoint()
     operation Main(): Unit
     {
-        let x = [1,2,3];
+        use q = Qubit();
+        let y = [q];
     }
 
 //    operation PrepareEntangledPair(left : Qubit, right : Qubit) : Unit is Adj + Ctl {
