@@ -18,6 +18,26 @@ include(CheckCXXCompilerFlag)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+
+if(CMAKE_BUILD_TYPE STREQUAL "DebugAddress")
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -g -O0")
+  set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -g -O0")
+  set(CMAKE_BUILD_TYPE "Debug")  
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "DebugMemory")
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=memory -g -O0")
+  set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=memory -g -O0")
+  set(CMAKE_BUILD_TYPE "Debug")  
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "DebugUndefined")
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=undefined -g -O0")
+  set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=memory -g -O0")
+  set(CMAKE_BUILD_TYPE "Debug")  
+endif()
+
 
 # -fvisibility-inlines-hidden is set when building LLVM and on Darwin warnings
 # are triggered if llvm-tutor is built without this flag (though otherwise it
@@ -35,6 +55,10 @@ set(using_clang_compiler FALSE)
 if ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(using_clang_compiler TRUE)
 endif ()
+
+
+
+
 
 # Add compiler flags if we are 
 if (MICROSOFT_GENERATE_COVERAGE)

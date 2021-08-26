@@ -9,38 +9,29 @@
 @PauliY = internal constant i2 -1
 @PauliZ = internal constant i2 -2
 @EmptyRange = internal constant %Range { i64 0, i64 1, i64 -1 }
-@0 = internal constant [3 x i8] c"()\00"
 
-define internal void @TeleportChain__Main__body() {
+define internal i64 @TeleportChain__F__body() {
+entry:
+  ret i64 9228
+}
+
+define internal i64 @TeleportChain__Main__body() {
+entry:
+  call void @TeleportChain__Test__body()
+  %a = call i64 @TeleportChain__F__body()
+  ret i64 %a
+}
+
+define internal void @TeleportChain__Test__body() {
 entry:
   %q = call %Qubit* @__quantum__rt__qubit_allocate()
-  %y = call %Array* @__quantum__rt__array_create_1d(i32 8, i64 1)
-  %0 = call i8* @__quantum__rt__array_get_element_ptr_1d(%Array* %y, i64 0)
-  %1 = bitcast i8* %0 to %Qubit**
-  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %q, i32 1)
-  store %Qubit* %q, %Qubit** %1, align 8
-  call void @__quantum__rt__array_update_alias_count(%Array* %y, i32 1)
-  call void @__quantum__rt__array_update_alias_count(%Array* %y, i32 -1)
-  br label %header__1
-
-header__1:                                        ; preds = %exiting__1, %entry
-  %2 = phi i64 [ 0, %entry ], [ %7, %exiting__1 ]
-  %3 = icmp sle i64 %2, 0
-  br i1 %3, label %body__1, label %exit__1
-
-body__1:                                          ; preds = %header__1
-  %4 = call i8* @__quantum__rt__array_get_element_ptr_1d(%Array* %y, i64 %2)
-  %5 = bitcast i8* %4 to %Qubit**
-  %6 = load %Qubit*, %Qubit** %5, align 8
-  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %6, i32 -1)
-  br label %exiting__1
-
-exiting__1:                                       ; preds = %body__1
-  %7 = add i64 %2, 1
-  br label %header__1
-
-exit__1:                                          ; preds = %header__1
-  call void @__quantum__rt__array_update_reference_count(%Array* %y, i32 -1)
+  %0 = call %Qubit* @TeleportChain__Xx__body(%Qubit* %q)
+  %z = alloca %Qubit*, align 8
+  store %Qubit* %0, %Qubit** %z, align 8
+  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %0, i32 1)
+  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %q, i32 -1)
+  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %0, i32 -1)
+  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %0, i32 -1)
   ret void
 }
 
@@ -48,34 +39,40 @@ declare %Qubit* @__quantum__rt__qubit_allocate()
 
 declare %Array* @__quantum__rt__qubit_allocate_array(i64)
 
-declare %Array* @__quantum__rt__array_create_1d(i32, i64)
-
-declare i8* @__quantum__rt__array_get_element_ptr_1d(%Array*, i64)
+define internal %Qubit* @TeleportChain__Xx__body(%Qubit* %q) {
+entry:
+  %0 = call %Qubit* @TeleportChain__Yy__body(%Qubit* %q)
+  ret %Qubit* %0
+}
 
 declare void @__quantum__rt__qubit_update_reference_count(%Qubit*, i32)
 
-declare void @__quantum__rt__array_update_alias_count(%Array*, i32)
-
-declare void @__quantum__rt__array_update_reference_count(%Array*, i32)
-
-define void @TeleportChain__Main__Interop() #0 {
+define internal %Qubit* @TeleportChain__Yy__body(%Qubit* %z) {
 entry:
-  call void @TeleportChain__Main__body()
-  ret void
+  %x = alloca %Qubit*, align 8
+  store %Qubit* %z, %Qubit** %x, align 8
+  call void @__quantum__rt__qubit_update_reference_count(%Qubit* %z, i32 1)
+  ret %Qubit* %z
+}
+
+define i64 @TeleportChain__Main__Interop() #0 {
+entry:
+  %0 = call i64 @TeleportChain__Main__body()
+  ret i64 %0
 }
 
 define void @TeleportChain__Main() #1 {
 entry:
-  call void @TeleportChain__Main__body()
-  %0 = call %String* @__quantum__rt__string_create(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @0, i32 0, i32 0))
-  call void @__quantum__rt__message(%String* %0)
-  call void @__quantum__rt__string_update_reference_count(%String* %0, i32 -1)
+  %0 = call i64 @TeleportChain__Main__body()
+  %1 = call %String* @__quantum__rt__int_to_string(i64 %0)
+  call void @__quantum__rt__message(%String* %1)
+  call void @__quantum__rt__string_update_reference_count(%String* %1, i32 -1)
   ret void
 }
 
 declare void @__quantum__rt__message(%String*)
 
-declare %String* @__quantum__rt__string_create(i8*)
+declare %String* @__quantum__rt__int_to_string(i64)
 
 declare void @__quantum__rt__string_update_reference_count(%String*, i32)
 

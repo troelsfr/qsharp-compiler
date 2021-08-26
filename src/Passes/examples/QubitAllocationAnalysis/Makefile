@@ -1,3 +1,6 @@
+qat: build-qat analysis-example.ll
+	../../Debug/Source/Apps/qat --generate --profile ruleSet -S analysis-example.ll
+
 run-expand: build-qaa build-esa analysis-example.ll
 	opt -load-pass-plugin ../../Debug/Source/Passes/libQirAllocationAnalysis.dylib \
 			-load-pass-plugin ../../Debug/Source/Passes/libExpandStaticAllocation.dylib --passes="expand-static-allocation" -S analysis-example.ll	
@@ -15,8 +18,14 @@ run-replace: build-ir build-qaa build-esa analysis-example.ll
 	opt  --passes="inline" -S test2.ll | opt -O1 -S
 
 
+
 build-prepare:
 	pushd  ../../ && mkdir -p Debug && cd Debug && cmake ..&& popd || popd
+
+build-qat: build-prepare
+	pushd  ../../Debug && make qat  && popd || popd
+
+
 
 build-qaa: build-prepare
 	pushd  ../../Debug && make QirAllocationAnalysis  && popd || popd
