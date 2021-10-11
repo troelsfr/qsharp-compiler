@@ -8,6 +8,7 @@ namespace TeleportChain {
     @EntryPoint()
     operation QuantumProgram(): Int
     {
+        /// Outer qubit
         use q = Qubit();    
 
         mutable ret = 1;
@@ -24,8 +25,14 @@ namespace TeleportChain {
         use q = Qubit();        
         mutable ret = 2;
         
+        // Logic to operate
         H(q);
-        CNOT(c,q);
+        CNOT(q, c);
+
+        // More advanced example
+        if (MResetZ(q) == One) { 
+            Z(c);
+        }
 
         if(n != 0)
         {
